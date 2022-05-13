@@ -2,7 +2,7 @@
   <div>
 
     <HomeHeader :userChecked="userChecked" :authUser="authUser"></HomeHeader>
-    <SingleDoctorMain :singledoc="singleDoc"></SingleDoctorMain>
+    <SingleDoctorMain :singledoc="singleDoc" :reviews="reviewsList"></SingleDoctorMain>
     <HomeFooter></HomeFooter>
 
   </div>   
@@ -27,6 +27,7 @@ export default {
         return {
 
             singleDoc: [],
+            reviewsList: [],
 
             authUser: window.authUser,
             userChecked: false,
@@ -44,6 +45,27 @@ export default {
             }
 
         },
+
+        getReviews() {
+            
+            axios.get('/api/reviews/' + this.$route.params.slug)
+            .then(response => {
+
+                if (response.data.success) {
+
+                    console.log(response.data.results)
+                    console.log('ciao')
+                    this.reviewsList = response.data.results
+                    console.log(this.reviewsList)
+
+                } else {
+                    console.log('chiamata fallita')
+                }
+            })
+
+            console.log(this.reviewsList)
+        },
+
         //ottengo il singolo dottore
         getDoctors() {
 
@@ -52,25 +74,27 @@ export default {
             axios.get('/api/doctors/' + slug)
             .then(response => {
 
-            if(response.data.success == false) {
-                abort(404, 'not found');
+                if(response.data.success == false) {
+                    abort(404, 'not found');
 
-            } else {
+                } else {
+                    
+                    this.singleDoc = response.data.results
+                }
+            })
 
-                this.singleDoc = response.data.results;
-                console.log(this.singleDoc);
-                
-            }
-        })
+            this.getReviews()
 
-      },
+        }
 
     },
     mounted() {
 
+        console.log(this.$route)
         this.checkAuth();
 
         this.getDoctors();
+
 
     }
 }

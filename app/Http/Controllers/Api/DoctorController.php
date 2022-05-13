@@ -113,6 +113,21 @@ class DoctorController extends Controller
     public function doctorByVote($average)
     {
         $doctors = Doctor::with(["reviews", "user", "specialties", "leads"])->get();
+        //immagini in home
+        $doctors->each(function ($doctor) {
+            //se ho photo
+            if ($doctor->photo) {
+                $doctor->photo = url("storage/" . $doctor->photo);
+            } else {
+                $doctor->photo = url("img/not_found.jpg");
+            }
+
+            if ($doctor->cv) {
+                $doctor->cv = url("storage/" . $doctor->cv);
+            } else {
+                $doctor->cv = "Nessun Curriculum presente!";
+            }
+        });
         $filterByVote = $doctors->filter(function ($doctor) use ($average) {
             $averageVote = null;
             $sum = 0;
@@ -148,46 +163,239 @@ class DoctorController extends Controller
             ]);
         }
     }
+    //per media voti
+    public function doctorByAvg($average){
+        $doctors = Doctor::with(["reviews","specialties","leads","user"])->get();
+        $doctors->each(function ($doctor) {
+            //se ho photo
+            if ($doctor->photo) {
+                $doctor->photo = url("storage/" . $doctor->photo);
+            } else {
+                $doctor->photo = url("img/not_found.jpg");
+            }
 
-    public function doctorByReviews($rangeMin, $rangeMax){
-        $doctors = Doctor::with(["reviews", "user", "specialties"])->get();
-        $filterByReviews = $doctors->filter(function($doctor) use ($rangeMin, $rangeMax){
+            if ($doctor->cv) {
+                $doctor->cv = url("storage/" . $doctor->cv);
+            } else {
+                $doctor->cv = "Nessun Curriculum presente!";
+            }
+        });
+        $filtered = $doctors->filter(function ($doctor) use($average){
+            $sum = 0;
             $reviewCounter = 0;
+            $averageVote = 0;
             foreach ($doctor->reviews as $review){
+                $reviewCounter++;
+                $sum += intval($review->vote);
+                }
+            if($reviewCounter === 0){
+                $averageVote = $sum;
+            } else {
+                $averageVote = $sum/$reviewCounter;
+            }
+
+            if($averageVote >= intval($average) && $averageVote < intval($average) + 1){
+                return true;
+            } else {
+                return false;
+            }
+        })->values()->all();
+
+        if(count($filtered) > 0){
+            return response()->json([
+                'success' => true,
+                'results' => $filtered,
+                'message' => 'Ecco tutti i dottori con media voto ' . $average,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'results' => 'Nessun medico con questa media voti',
+            ]);
+        }
+    }
+    //per numero di recensioni
+    public function doctorByReviewsNumber($rangeMin)
+    {
+        $doctors = Doctor::with(["reviews", "specialties", "leads", "user"])->get();
+        $doctors->each(function ($doctor) {
+            //se ho photo
+            if ($doctor->photo) {
+                $doctor->photo = url("storage/" . $doctor->photo);
+            } else {
+                $doctor->photo = url("img/not_found.jpg");
+            }
+
+            if ($doctor->cv) {
+                $doctor->cv = url("storage/" . $doctor->cv);
+            } else {
+                $doctor->cv = "Nessun Curriculum presente!";
+            }
+        });
+        $filtered = $doctors->filter(function ($doctor) use ($rangeMin) {
+            $reviewCounter = 0;
+            foreach ($doctor->reviews as $review) {
                 $reviewCounter++;
             }
 
-            if($rangeMin == 10){
-                if($reviewCounter >= $rangeMin ){
+            if (intval($rangeMin) == 10) {
+                if ($reviewCounter >= intval($rangeMin)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif (intval($rangeMin) == 1){
+                $rangeMin = 0;
+                if ($reviewCounter >= 0 && $reviewCounter < $rangeMin + 5) {
                     return true;
                 } else {
                     return false;
                 }
             } else {
-                if($reviewCounter >= $rangeMin && $reviewCounter < $rangeMax ){
+                if ($reviewCounter >= intval($rangeMin) && $reviewCounter < intval($rangeMin) + 5) {
                     return true;
-                } else{
+                } else {
                     return false;
                 }
+            }
 
+        })->values()->all();
+        if (count($filtered) > 0) {
+            return response()->json([
+                'success' => true,
+                'results' => $filtered,
+                'message' => 'Ecco tutti i dottori numero di recensioni compreso tra ' . $rangeMin . ' e ' . ($rangeMin + 5),
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'results' => 'Nessun medico con questo numero di recensioni',
+            ]);
+        }
+    }
+    // dottori media e n recensioni
+    public function doctorByAll($average, $rangeMin){
+        $doctors = Doctor::with(["reviews","specialties","leads","user"])->get();
+        $doctors->each(function ($doctor) {
+            //se ho photo
+            if ($doctor->photo) {
+                $doctor->photo = url("storage/" . $doctor->photo);
+            } else {
+                $doctor->photo = url("img/not_found.jpg");
+            }
+
+            if ($doctor->cv) {
+                $doctor->cv = url("storage/" . $doctor->cv);
+            } else {
+                $doctor->cv = "Nessun Curriculum presente!";
+            }
+        });
+        $filtered = $doctors->filter(function($doctor) use($average, $rangeMin){
+            $reviewCounter = 0;
+            $sum = 0;
+            $averageVote = 0;
+            foreach ($doctor->reviews as $review){
+                $reviewCounter++;
+                $sum += intval($review->vote);
+            }
+            if($reviewCounter === 0){
+                $averageVote = $sum;
+            } else {
+                $averageVote = $sum/$reviewCounter;
+            }
+
+            if($rangeMin == 10){
+                if($reviewCounter >= $rangeMin && $averageVote >= intval($average) && $averageVote < intval($average) + 1){
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                if($reviewCounter >= $rangeMin && $reviewCounter < ($rangeMin + 5) && $averageVote >= intval($average) && $averageVote < intval($average) + 1){
+                    return true;
+                } else {
+                    return false;
+                }
             }
         })->values()->all();
-
-        if(count($filterByReviews) > 0){
-            return response()->json(
-                [
-                    'success' => true,
-                    'range' => 'Numero recensioni compreso tra ' . $rangeMin . ' e ' . $rangeMax,
-                    'results' => $filterByReviews,
-                ]
-            );
+        if(count($filtered) > 0){
+            return response()->json([
+                'success' => true,
+                'results' => $filtered,
+                'message' => 'Ecco tutti i dottori numero di recensioni compreso tra ' . $rangeMin . ' e ' . ($rangeMin + 5) . ' e  media voto di ' . $average,
+            ]);
         } else {
-            return response()->json(
-                [
-                    'success' => false,
-                    'results' => 'Nessun medico con questo numero di recensioni!',
-                ]
-            );
+            return response()->json([
+                'success' => false,
+                'results' => 'Nessun medico con questo numero di recensioni  media voto',
+            ]);
         }
+    }
+    //filter
+    public function filter(Request $request){
+
+        $avg = $request->query('average');
+//        dd($avg);
+        $rMin = $request->query('rangeMin');
+//        $rMax = $request->query('rangeMax');
+        if(isset($avg) && !isset($rMin)){
+            return $this->doctorByAvg($avg);
+        } elseif (!isset($avg) && isset($rMin)){
+            return $this->doctorByReviewsNumber($rMin);
+        } else {
+            return $this->doctorByAll($avg, $rMin);
+        }
+//        return $this->doctorByReviewsNumber($rMin, $rMax);
+
+    }
+//$average = null, $rangeMin = null, $rangeMax = null
+    public function doctorsByAll(Request $request){
+        // ho solo media
+        $average = $request->query('average');
+        dd($average);
+        /*$rangeMin = $request->rangeMin;
+        $rangeMax = $request->rangeMax;
+        if($average && !$rangeMin  && !$rangeMax){
+            return $this->doctorByAvg($average);
+        } elseif (!$average && $rangeMin && $rangeMax) {
+            $doctors = Doctor::with(["reviews","specialties","leads","user"])->get();
+            $filtered = $doctors->filter(function($doctor) use($rangeMin, $rangeMax){
+                $reviewCounter = 0;
+                foreach ($doctor->reviews as $review){
+                    $reviewCounter++;
+                }
+
+                if($rangeMin == 10){
+                    if($reviewCounter >= $rangeMin){
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if($reviewCounter >= $rangeMin && $reviewCounter < $rangeMax){
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            })->values()->all();
+            if(count($filtered) > 0){
+                return response()->json([
+                    'success' => true,
+                    'results' => $filtered,
+                    'message' => 'Ecco tutti i dottori numero di recensioni compreso tra ' . $rangeMin . ' e ' . $rangeMax,
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'results' => 'Nessun medico con questo numero di recensioni',
+                ]);
+            }
+        }*/
+        // ho solo media e range minimo
+
+        // ho solo i range
+
+        //ho tutti e tre
     }
 }

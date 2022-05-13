@@ -52,4 +52,16 @@ class ReviewController extends Controller
         }
     }
 
+    public function index($docSlug) {
+
+        $doctor = Doctor::all()->where('slug', '=', $docSlug)->first();
+
+        $reviews = Review::all()->where('doctor_id', '=' , $doctor->id)->sortByDesc('created_at')->values()->all();
+
+        return response()->json([
+            'results' => $reviews,
+            'success' => true,
+        ]);       
+    }
+
 }

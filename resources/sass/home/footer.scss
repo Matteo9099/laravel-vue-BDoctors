@@ -1,9 +1,10 @@
 @import "../_variables.scss";
 
 #footer {
-  background-color: $main-bg;
-  padding-top: 50px;
-  padding-bottom: 30px;
+  // background-color: $main-bg;
+  background: linear-gradient(-180deg, $main-bg 34%,#0092cc 100%);
+  padding-top: 80px;
+  padding-bottom: 80px;
   
   .social-row {
 

@@ -60,7 +60,7 @@
                   <h3>{{singledoc.reviews.length}} Recensioni</h3>
 
                   <ul class="prova">
-                    <li v-for="(review, index) in singledoc.reviews" :key="index">
+                    <li v-for="(review, index) in reviews" :key="index">
 
                       <h4>{{review.author}}</h4>
 

@@ -6,11 +6,13 @@
       <div id="jumbotron">
         <!-- TESTO JUMBOTRON -->
         <div class="container text-center text-white">
-          <h2>Trova lo specialista che fa per te</h2>
+          
+          <p>Trova lo specialista che fa per te</p>
 
-          <p>Prenota la tua visita</p>
+          <h2>Prenota online la tua visita medica</h2>
 
           <p>Cerca uno specialista adesso</p>
+
         </div>
 
 
@@ -21,25 +23,26 @@
             <div class="row justify-content-center px-2">
 
               <!-- WRAPPER SELECT e BUTTON -->
-              <div id="spec-wrap" class="col-12 col-lg-9 px-3 py-4 px-lg-4 py-lg-4">
+<!--              <div id="spec-wrap" class="col-12 col-lg-9 px-3 py-4 px-lg-4 py-lg-4">-->
 
-                <div class="row justify-content-center">
-                  <!-- SELECT SPECIALIZZAZIONI -->
-                  <div class="col-12 col-lg-8 mb-2 mb-lg-0">
-                    <select class="form-select p-2" v-model="selectedSpecialty" >
-                      <option selected disabled value="">Scegli una specializzazione</option>
-                      <option v-for="specialty in specialtiesList" :key="specialty.id" :value="specialty.slug" > {{specialty.name}} </option>
-                    </select>
-                  </div>
+<!--                <div class="row justify-content-center">-->
+<!--                  &lt;!&ndash; SELECT SPECIALIZZAZIONI &ndash;&gt;-->
+<!--                  <div class="col-12 col-lg-8 mb-2 mb-lg-0">-->
+<!--                    <select class="form-select p-2" v-model="selectedSpecialty" >-->
+<!--                      <option selected disabled value="">Scegli una specializzazione</option>-->
+<!--                      <option v-for="specialty in specialtiesList" :key="specialty.id" :value="specialty.slug" > {{specialty.name}} </option>-->
+<!--                    </select>-->
+<!--                  </div>-->
 
-                  <!-- BUTTON CERCA -->
-                  <div class="col-12 col-lg-4">
-                      <router-link id="advanced-search" class="btn btn-specialty p-2" :to="{name: 'search', params : {slug : selectedSpecialty}}">Cerca</router-link>
-                  </div>
+<!--                  &lt;!&ndash; BUTTON CERCA &ndash;&gt;-->
+<!--                  <div class="col-12 col-lg-4">-->
+<!--                      <router-link id="advanced-search" class="btn btn-specialty p-2" :to="{name: 'search', params : {slug : selectedSpecialty}}">Cerca</router-link>-->
+<!--                  </div>-->
 
-                </div>
+<!--                </div>-->
 
-              </div>
+<!--              </div>-->
+                <SelectSpecialty :specialtiesList="specialtiesList"/>
 
             </div>
 
@@ -57,6 +60,75 @@
 
       </div>
 
+      <div id="user-guide">
+
+        <div class="container">
+
+          <div class="row row-cols-1 row-cols-lg-3">
+
+            <!-- COLONNA GUIDA 1 -->
+            <div class="col d-flex flex-column">
+
+                <!-- IMG GUIDA -->
+                <div class="img-guide text-center">
+                  <img src="../../images/search-frontend.png">
+                </div>
+
+                <!-- TESTO GUIDA -->
+                <div class="text-guide text-center">
+                  <h3>Cerca</h3>
+                  <p>
+                    Seleziona una specializzazione e cerca tra i nostri medici 
+                    che corrispondono alla tua richiesta.
+                  </p>
+                </div>
+                
+            </div>
+
+            <!-- COLONNA GUIDA 2 -->
+            <div class="col d-flex flex-column">
+
+                <!-- IMG GUIDA -->
+                <div class="img-guide text-center">
+                  <img src="../../images/medical-team.png">
+                </div>
+
+                <!-- TESTO GUIDA -->
+                <div class="text-guide text-center">
+                  <h3>Scegli il medico</h3>
+                  <p>
+                    Fai la scelta migliore per le tue esigenze. 
+                    Valuta il curriculum e le recensioni dei pazienti
+                  </p>
+                </div>
+                
+            </div>
+
+            <!-- COLONNA GUIDA 3 -->
+            <div class="col d-flex flex-column">
+
+                <!-- IMG GUIDA -->
+                <div class="img-guide text-center">
+                  <img src="../../images/doctor_book.png">
+                </div>
+
+                <!-- TESTO GUIDA -->
+                <div class="text-guide text-center">
+                  <h3>Prenota un appuntamento</h3>
+                  <p>
+                    Contatta il medico che hai scelto via telefono o scrivi un messaggio veloce.
+                    Bastano pochi secondi.
+                  </p>
+                </div>
+                
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
 
       <!-- SEZIONE DOTTORI SPONSORIZZATI -->
       <HomeSponsorizzati :doctors="docsList"></HomeSponsorizzati>
@@ -69,16 +141,17 @@
 
 <script>
 
+  import 'animate.css';
   import HomeSponsorizzati from '../components/HomeSponsorizzati';
+  import SelectSpecialty from '../components/SelectSpecialty';
 
   export default {
 
       name: 'MainHomepage',
 
       components: {
-
-      HomeSponsorizzati,
-
+        SelectSpecialty,
+        HomeSponsorizzati,
     },
 
     data() {
