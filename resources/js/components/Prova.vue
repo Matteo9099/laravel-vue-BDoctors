@@ -6,8 +6,8 @@
 export default {
     name: "Prova.vue",
     methods: {
-        filterDoctors() {
-            this.doctors = [];
+        filterprofessionals() {
+            this.professionals = [];
             // selezionati entrambi
             if(this.checkedReview.length > 0 && this.checkedNumberReview.length > 0 ){
                 this.checkedReview.forEach( (check, index) => {
@@ -21,9 +21,9 @@ export default {
                         rangeMin : rangeMin,
                     };
                     axios.get('/api/filter', {params}).then( res => {
-                        res.data.results.filter( doctor =>{
-                            if(!this.doctors.some( doc => doc.id == doctor.id)){
-                                this.doctors.push(doctor);
+                        res.data.results.filter( professional =>{
+                            if(!this.professionals.some( prof => prof.id == professional.id)){
+                                this.professionals.push(professional);
                             }
                         })
                     });
@@ -39,24 +39,24 @@ export default {
                         rangeMin : rangeMin,
                     };
                     axios.get('/api/filter', {params}).then( res => {
-                        res.data.results.filter( doctor =>{
-                            if(!this.doctors.some( doc => doc.id == doctor.id)){
-                                this.doctors.push(doctor);
+                        res.data.results.filter( professional =>{
+                            if(!this.professionals.some( prof => prof.id == professional.id)){
+                                this.professionals.push(professional);
                             }
                         })
                     });
                 })
             } else if (this.checkedReview.length > 0 && this.checkedNumberReview.length == 0){
                 // selezionato solo media voto
-                this.doctors = [];
+                this.professionals = [];
                 //funcione per solo media
             } else if (this.checkedReview.length == 0 && this.checkedNumberReview.length > 0){
                 //selezionato solo numero recensioni
-                this.doctors = [];
+                this.professionals = [];
                 // funzione per solo numer rec
             } else {
-                this.doctor =[];
-                this.getDoctors();
+                this.professional =[];
+                this.getprofessionals();
             }
 
         }
@@ -65,7 +65,7 @@ export default {
         return {
             checkedReview: [],
             checkedNumberReview : [],
-            doctors : [],
+            professionals : [],
         };
     }
 };

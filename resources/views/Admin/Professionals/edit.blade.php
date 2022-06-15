@@ -8,7 +8,7 @@
             <div class="col-6 mx-auto">
                 {{-- form creazione --}}
                 <form
-                    action="{{ route('admin.doctors.update', $doctor->id) }}"
+                    action="{{ route('admin.professionals.update', $professional->id) }}"
                     method="POST" enctype="multipart/form-data"
                 >
                     @csrf
@@ -19,40 +19,17 @@
                     {{-- indirizzo studio medico --}}
                     <div class="mb-3">
                         <label for="medical_address" class="form-label">Inserisci indirizzo studio medico</label>
-                        <input type="text" class="form-control" id="medical_address" name="medical_address" aria-describedby="emailHelp" value="{{ old('medical_address', $doctor->medical_address) }}">
+                        <input type="text" class="form-control" id="medical_address" name="medical_address" aria-describedby="emailHelp" value="{{ old('medical_address', $professional->medical_address) }}">
                     </div>
                     {{-- telefono --}}
                     <div class="mb-3">
                         <label for="phone" class="form-label">Inserisci il tuo numero di telefono</label>
-                        <input type="text" class="form-control" id="phone" aria-describedby="emailHelp" name="phone" value="{{ old('phone', $doctor->phone) }}">
+                        <input type="text" class="form-control" id="phone" aria-describedby="emailHelp" name="phone" value="{{ old('phone', $professional->phone) }}">
                     </div>
                     {{-- servizi offerti --}}
                     <div class="form-floating mb-3">
-                        <textarea name="performance" class="form-control" placeholder="Inserisci le prestazioni che offri" id="performance" rows="10" style="height: 300px">{{ old('performance', $doctor->performance) }}</textarea>
+                        <textarea name="performance" class="form-control" placeholder="Inserisci le prestazioni che offri" id="performance" rows="10" style="height: 300px">{{ old('performance', $professional->performance) }}</textarea>
                         <label for="performance">Prestazioni offerte</label>
-                    </div>
-                    {{-- cv --}}
-                    <div class="mb-3 d-flex justify-content-between">
-                        <div>
-                            <label for="cvBlob" class="form-label">Carica il tuo Curriculum Vitae</label>
-                            <input name="cvBlob" type="file" class="form-control" id="cvBlob">
-                        </div>
-                        <div class="edit-info-preview me-3 text-center">
-                            <p class="mb-3">Attualmente caricato</p>
-
-                            @if (!$doctor->cv)
-                                <p class="text-danger">Non hai caricato nessun cv</p>
-                            @else
-                                {{-- <a href="{{ route('admin.downloadCv') }}">-> Il mio cv
-                                    <-</a> --}}
-                                <div class="d-flex flex-column gap-2">
-                                    <a href="{{  url('storage/'. Auth::user()->doctor->cv)  }}">-> Il mio Cv <-</a>
-                                    <a href="{{ route('admin.deleteCv', $doctor->slug) }}">Elimina Cv</a>
-                                </div>
-                            @endif
-
-                        </div>
-
                     </div>
                     {{-- foto --}}
                     <div class="mb-3 d-flex justify-content-between">
@@ -63,27 +40,27 @@
 
                         <div class="edit-info-preview me-4 text-center" id="user-img">
                             <p class="mb-2">Attualmente in uso</p>
-                            @if (!$doctor->photo)
+                            @if (!$professional->photo)
                                 <p class="text-danger">Non hai inserito una foto profilo</p>
                             @else
-                                <img src=" {{ asset('storage/' . $doctor->photo) }} " alt="{{ $doctor->id }}_photo" height="50">
+                                <img src=" {{ asset('storage/' . $professional->photo) }} " alt="{{ $professional->id }}_photo" height="50">
 
                                 <div id="user-img-big">
                                     <div class="container-img-big">
-                                        <img src=" {{ asset('storage/' . $doctor->photo) }} " alt="{{ $doctor->id }}_photo">
+                                        <img src=" {{ asset('storage/' . $professional->photo) }} " alt="{{ $professional->id }}_photo">
                                         <div class="container__arrow container__arrow--lc"></div>
                                     </div>
                                 </div>
                                 {{-- eliminazione foto --}}
                                 <br> <br>
-                                {{-- <form action="{{ route('admin.deletePhoto', $doctor->id) }}" method="POST">
+                                {{-- <form action="{{ route('admin.deletePhoto', $professional->id) }}" method="POST">
                                     @csrf
 
                                     @method('DELETE')
 
                                     <button type="submit" id="deletePhoto" class="border-0 px-2 py-1">Elimina la foto</button>
                                 </form> --}}
-                                <a href="{{ route('admin.deletePhoto', $doctor->slug) }}">Elimina foto</a>
+                                <a href="{{ route('admin.deletePhoto', $professional->slug) }}">Elimina foto</a>
                             @endif
 
                         </div>
@@ -106,7 +83,7 @@
                                 </div>
                             @else
                                 <div class="form-check">
-                                    <input onclick="checkIfEmpty()" type="checkbox" name="specialtiesId[]" class="form-check-input" value="{{ $specialty->id }}" id="specialty_{{ $specialty->id }}" {{ ($doctor->specialties->contains($specialty) ? 'checked' : '') }} >
+                                    <input onclick="checkIfEmpty()" type="checkbox" name="specialtiesId[]" class="form-check-input" value="{{ $specialty->id }}" id="specialty_{{ $specialty->id }}" {{ ($professional->specialties->contains($specialty) ? 'checked' : '') }} >
                                     <label class="form-check-label" for="specialty_{{ $specialty->id }}">
                                         {{ $specialty->name }}
                                     </label>

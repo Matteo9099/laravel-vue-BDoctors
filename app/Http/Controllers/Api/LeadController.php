@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Doctor;
+use App\Professional;
 use App\Http\Controllers\Controller;
 use App\Lead;
 use App\Mail\NewLead;
@@ -23,7 +23,7 @@ class LeadController extends Controller
                 'author' => 'required|min:2',
                 'email' => "required|email",
                 'message' => 'required|min:5',
-                'doctor_id' => 'required|exists:doctors,id',
+                'professional_id' => 'required|exists:professionals,id',
             ]
         );
 
@@ -41,7 +41,7 @@ class LeadController extends Controller
             $newLead->fill($data);
             $newLead->save();
 
-            $doc = Doctor::where('id', $data['doctor_id'])->with('user')->first();
+            $doc = Professional::where('id', $data['professional_id'])->with('user')->first();
             $docMail = $doc->user->email;
             $docName = $doc->user->name;
             $docSurname = $doc->user->surname;

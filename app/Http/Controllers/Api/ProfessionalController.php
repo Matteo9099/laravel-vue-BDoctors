@@ -2,36 +2,30 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Doctor;
+use App\Professional;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DoctorController extends Controller
+class ProfessionalController extends Controller
 {
     //
     public function index()
     {
-        $doctors = Doctor::with(["user", "specialties"])->paginate(10);
+        $professionals = Professional::with(["user", "specialties"])->paginate(10);
 
-        $doctors->each(function ($doctor) {
+        $professionals->each(function ($professional) {
             //se ho photo
-            if ($doctor->photo) {
-                $doctor->photo = url("storage/" . $doctor->photo);
+            if ($professional->photo) {
+                $professional->photo = url("storage/" . $professional->photo);
             } else {
-                $doctor->photo = url("img/not_found.jpg");
-            }
-
-            if ($doctor->cv) {
-                $doctor->cv = url("storage/" . $doctor->cv);
-            } else {
-                $doctor->cv = "Nessun Curriculum presente!";
+                $professional->photo = url("img/not_found.jpg");
             }
         });
 
         return response()->json([
-            "results" => $doctors,
+            "results" => $professionals,
             "success" => true,
         ]);
     }
@@ -39,72 +33,61 @@ class DoctorController extends Controller
     //singolo dottore
     public function show($slug)
     {
-        $doctor = Doctor::where("slug", $slug)
+        $professional = Professional::where("slug", $slug)
             ->with(["user", "specialties", "reviews"])
             ->first();
 
-        if (!$doctor) {
+        if (!$professional) {
             return response()->json([
                 "results" => "Nessun dottore corrisponde alla ricerca",
                 "success" => false,
             ]);
         } else {
             //se ho photo
-            if ($doctor->photo) {
-                $doctor->photo = url("storage/" . $doctor->photo);
+            if ($professional->photo) {
+                $professional->photo = url("storage/" . $professional->photo);
             } else {
-                $doctor->photo = url("img/not_found.jpg");
-            }
-
-            if ($doctor->cv) {
-                $doctor->cv = url("storage/" . $doctor->cv);
-            } else {
-                $doctor->cv = "Nessun Curriculum presente!";
+                $professional->photo = url("img/not_found.jpg");
             }
 
             return response()->json([
-                "results" => $doctor,
+                "results" => $professional,
                 "success" => true,
             ]);
         }
     }
 
     //funzione provvisoria per ottenere i dottori nella HOME
-    public function getAllDoctors($specialtySlug = null)
+    public function getAllprofessionals($specialtySlug = null)
     {
-        $doctors = Doctor::with(["user", "specialties", "leads", "reviews"])->get();
+        $professionals = Professional::with(["user", "specialties", "leads", "reviews"])->get();
 
         //immagini in home
-        $doctors->each(function ($doctor) use ($doctors) {
+        $professionals->each(function ($professional) use ($professionals) {
             $counter = 0;
-            if(count($doctor->subscriptions) > 0){
+            if(count($professional->subscriptions) > 0){
 //                dd($counter);
-                $doctors->splice($counter, 0, [$doctor]);
+                $professionals->splice($counter, 0, [$professional]);
             };
             //se ho photo
-            if ($doctor->photo) {
-                $doctor->photo = url("storage/" . $doctor->photo);
+            if ($professional->photo) {
+                $professional->photo = url("storage/" . $professional->photo);
             } else {
-                $doctor->photo = url("img/not_found.jpg");
+                $professional->photo = url("img/not_found.jpg");
             }
 
-            if ($doctor->cv) {
-                $doctor->cv = url("storage/" . $doctor->cv);
-            } else {
-                $doctor->cv = "Nessun Curriculum presente!";
-            }
         });
-//        $doctorsFirst = $doctors;
+//        $professionalsFirst = $professionals;
 
-//        dd($doctors);
+//        dd($professionals);
         if(!isset($specialtySlug)){
             return response()->json([
-                "results" => $doctors->unique(),
+                "results" => $professionals->unique(),
                 "success" => true,
             ]);
         } else {
-            $doctorsBySpecialty = $doctors->filter(function($doctor) use($specialtySlug){
-                if($doctor->specialties->contains('slug', $specialtySlug)){
+            $professionalsBySpecialty = $professionals->filter(function($professional) use($specialtySlug){
+                if($professional->specialties->contains('slug', $specialtySlug)){
                     return true;
                 } else {
                     return false;
@@ -112,40 +95,35 @@ class DoctorController extends Controller
             })->values()->all();
 
             return response()->json([
-                "results" => $doctorsBySpecialty,
+                "results" => $professionalsBySpecialty,
                 "success" => true,
             ]);
         }
     }
 
-    public function doctorByVote($average)
+    public function professionalByVote($average)
     {
-        $doctors = Doctor::with(["reviews", "user", "specialties", "leads"])->get();
+        $professionals = Professional::with(["reviews", "user", "specialties", "leads"])->get();
         //immagini in home
-        $doctors->each(function ($doctor) {
+        $professionals->each(function ($professional) {
             //se ho photo
-            if ($doctor->photo) {
-                $doctor->photo = url("storage/" . $doctor->photo);
+            if ($professional->photo) {
+                $professional->photo = url("storage/" . $professional->photo);
             } else {
-                $doctor->photo = url("img/not_found.jpg");
+                $professional->photo = url("img/not_found.jpg");
             }
 
-            if ($doctor->cv) {
-                $doctor->cv = url("storage/" . $doctor->cv);
-            } else {
-                $doctor->cv = "Nessun Curriculum presente!";
-            }
         });
-        $filterByVote = $doctors->filter(function ($doctor) use ($average) {
+        $filterByVote = $professionals->filter(function ($professional) use ($average) {
             $averageVote = null;
             $sum = 0;
-            foreach ($doctor->reviews as $review) {
+            foreach ($professional->reviews as $review) {
                 $sum += $review->vote;
             }
-            if(count($doctor->reviews) == 0){
+            if(count($professional->reviews) == 0){
                 $averageVote = $sum;
             }else{
-                $averageVote = $sum / count($doctor->reviews);
+                $averageVote = $sum / count($professional->reviews);
             }
 //            dd($averageVote, intval($average));
             if (
@@ -172,27 +150,22 @@ class DoctorController extends Controller
         }
     }
     //per media voti
-    public function doctorByAvg($average){
-        $doctors = Doctor::with(["reviews","specialties","leads","user"])->get();
-        $doctors->each(function ($doctor) {
+    public function professionalByAvg($average){
+        $professionals = Professional::with(["reviews","specialties","leads","user"])->get();
+        $professionals->each(function ($professional) {
             //se ho photo
-            if ($doctor->photo) {
-                $doctor->photo = url("storage/" . $doctor->photo);
+            if ($professional->photo) {
+                $professional->photo = url("storage/" . $professional->photo);
             } else {
-                $doctor->photo = url("img/not_found.jpg");
+                $professional->photo = url("img/not_found.jpg");
             }
 
-            if ($doctor->cv) {
-                $doctor->cv = url("storage/" . $doctor->cv);
-            } else {
-                $doctor->cv = "Nessun Curriculum presente!";
-            }
         });
-        $filtered = $doctors->filter(function ($doctor) use($average){
+        $filtered = $professionals->filter(function ($professional) use($average){
             $sum = 0;
             $reviewCounter = 0;
             $averageVote = 0;
-            foreach ($doctor->reviews as $review){
+            foreach ($professional->reviews as $review){
                 $reviewCounter++;
                 $sum += intval($review->vote);
                 }
@@ -223,26 +196,21 @@ class DoctorController extends Controller
         }
     }
     //per numero di recensioni
-    public function doctorByReviewsNumber($rangeMin)
+    public function professionalByReviewsNumber($rangeMin)
     {
-        $doctors = Doctor::with(["reviews", "specialties", "leads", "user"])->get();
-        $doctors->each(function ($doctor) {
+        $professionals = Professional::with(["reviews", "specialties", "leads", "user"])->get();
+        $professionals->each(function ($professional) {
             //se ho photo
-            if ($doctor->photo) {
-                $doctor->photo = url("storage/" . $doctor->photo);
+            if ($professional->photo) {
+                $professional->photo = url("storage/" . $professional->photo);
             } else {
-                $doctor->photo = url("img/not_found.jpg");
+                $professional->photo = url("img/not_found.jpg");
             }
 
-            if ($doctor->cv) {
-                $doctor->cv = url("storage/" . $doctor->cv);
-            } else {
-                $doctor->cv = "Nessun Curriculum presente!";
-            }
         });
-        $filtered = $doctors->filter(function ($doctor) use ($rangeMin) {
+        $filtered = $professionals->filter(function ($professional) use ($rangeMin) {
             $reviewCounter = 0;
-            foreach ($doctor->reviews as $review) {
+            foreach ($professional->reviews as $review) {
                 $reviewCounter++;
             }
 
@@ -282,27 +250,22 @@ class DoctorController extends Controller
         }
     }
     // dottori media e n recensioni
-    public function doctorByAll($average, $rangeMin){
-        $doctors = Doctor::with(["reviews","specialties","leads","user"])->get();
-        $doctors->each(function ($doctor) {
+    public function professionalByAll($average, $rangeMin){
+        $professionals = Professional::with(["reviews","specialties","leads","user"])->get();
+        $professionals->each(function ($professional) {
             //se ho photo
-            if ($doctor->photo) {
-                $doctor->photo = url("storage/" . $doctor->photo);
+            if ($professional->photo) {
+                $professional->photo = url("storage/" . $professional->photo);
             } else {
-                $doctor->photo = url("img/not_found.jpg");
+                $professional->photo = url("img/not_found.jpg");
             }
 
-            if ($doctor->cv) {
-                $doctor->cv = url("storage/" . $doctor->cv);
-            } else {
-                $doctor->cv = "Nessun Curriculum presente!";
-            }
         });
-        $filtered = $doctors->filter(function($doctor) use($average, $rangeMin){
+        $filtered = $professionals->filter(function($professional) use($average, $rangeMin){
             $reviewCounter = 0;
             $sum = 0;
             $averageVote = 0;
-            foreach ($doctor->reviews as $review){
+            foreach ($professional->reviews as $review){
                 $reviewCounter++;
                 $sum += intval($review->vote);
             }
@@ -347,34 +310,29 @@ class DoctorController extends Controller
         $rMin = $request->query('rangeMin');
 //        $rMax = $request->query('rangeMax');
         if(isset($avg) && !isset($rMin)){
-            return $this->doctorByAvg($avg);
+            return $this->professionalByAvg($avg);
         } elseif (!isset($avg) && isset($rMin)){
-            return $this->doctorByReviewsNumber($rMin);
+            return $this->professionalByReviewsNumber($rMin);
         } else {
-            return $this->doctorByAll($avg, $rMin);
+            return $this->professionalByAll($avg, $rMin);
         }
-//        return $this->doctorByReviewsNumber($rMin, $rMax);
+//        return $this->professionalByReviewsNumber($rMin, $rMax);
 
     }
 //$average = null, $rangeMin = null, $rangeMax = null
-    public function doctorsSponsored(){
-        $doctors = Doctor::with(['user', 'subscriptions', 'specialties', 'reviews'])->get();
-        $doctors->each(function ($doctor) {
+    public function professionalsSponsored(){
+        $professionals = Professional::with(['user', 'subscriptions', 'specialties', 'reviews'])->get();
+        $professionals->each(function ($professional) {
             //se ho photo
-            if ($doctor->photo) {
-                $doctor->photo = url("storage/" . $doctor->photo);
+            if ($professional->photo) {
+                $professional->photo = url("storage/" . $professional->photo);
             } else {
-                $doctor->photo = url("img/not_found.jpg");
+                $professional->photo = url("img/not_found.jpg");
             }
 
-            if ($doctor->cv) {
-                $doctor->cv = url("storage/" . $doctor->cv);
-            } else {
-                $doctor->cv = "Nessun Curriculum presente!";
-            }
         });
-        $filtered = $doctors->filter(function($doctor){
-           $sponsorFilter = $doctor->subscriptions->filter(function($sub){
+        $filtered = $professionals->filter(function($professional){
+           $sponsorFilter = $professional->subscriptions->filter(function($sub){
                $dateOne = new Carbon($sub->pivot->expires_at);
                $dateTwo = Carbon::now()->format('M d Y');
                if($dateOne->gt($dateTwo)){

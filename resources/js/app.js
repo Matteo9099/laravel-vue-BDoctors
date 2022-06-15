@@ -1,9 +1,9 @@
 require('./bootstrap');
 
 
-const deleteDoctorProfile = document.querySelector('.delete-profile');
-if(deleteDoctorProfile){
-    deleteDoctorProfile.addEventListener('click',
+const deleteProfessionalProfile = document.querySelector('.delete-profile');
+if(deleteProfessionalProfile){
+    deleteProfessionalProfile.addEventListener('click',
         (e)=>{
             if(!confirm('Vuoi davvero eliminare il profilo del dottore?')){
                 e.preventDefault();

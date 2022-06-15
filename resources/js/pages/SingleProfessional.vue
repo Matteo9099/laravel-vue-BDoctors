@@ -2,7 +2,7 @@
   <div>
 
     <HomeHeader :userChecked="userChecked" :authUser="authUser"></HomeHeader>
-    <SingleDoctorMain :singledoc="singleDoc" :reviews="reviewsList"></SingleDoctorMain>
+    <SingleProfessionalMain :singleprof="singleProf" :reviews="reviewsList"></SingleProfessionalMain>
     <HomeFooter></HomeFooter>
 
   </div>   
@@ -11,22 +11,22 @@
 <script>
 
 import HomeHeader from '../components/HomeHeader';
-import SingleDoctorMain from '../components/SingleDoctorMain';
+import SingleProfessionalMain from '../components/SingleProfessionalMain';
 import HomeFooter from '../components/HomeFooter';
 
 export default {
-    name: "SingleDoctor",
+    name: "SingleProfessional",
 
     components: {
         HomeHeader,
-        SingleDoctorMain,
+        SingleProfessionalMain,
         HomeFooter,
     },
     
     data() {
         return {
 
-            singleDoc: [],
+            singleProf: [],
             reviewsList: [],
 
             authUser: window.authUser,
@@ -67,11 +67,11 @@ export default {
         },
 
         //ottengo il singolo dottore
-        getDoctors() {
+        getProfessionals() {
 
             const slug = this.$route.params.slug;
 
-            axios.get('/api/doctors/' + slug)
+            axios.get('/api/professionals/' + slug)
             .then(response => {
 
                 if(response.data.success == false) {
@@ -79,7 +79,7 @@ export default {
 
                 } else {
                     
-                    this.singleDoc = response.data.results
+                    this.singleProf = response.data.results
                 }
             })
 
@@ -93,7 +93,7 @@ export default {
         console.log(this.$route)
         this.checkAuth();
 
-        this.getDoctors();
+        this.getProfessionals();
 
 
     }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
-use App\Doctor;
+use App\Professional;
 use App\Specialty;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
@@ -94,14 +94,14 @@ class RegisterController extends Controller
         // slug unico
         $counter = 1;
 
-        while (Doctor::where('slug', $slug)->first()) {
+        while (Professional::where('slug', $slug)->first()) {
             // se è già presente aggiunge il counter allo slug creato
             $slug  = Str::slug($data['name'] .'-'. $data['surname']) . '-' . $counter;
             $counter++;
         };
 
 
-        $doctor = Doctor::create([
+        $professional = Professional::create([
             'user_id' => $user->id,
             'slug' => $slug,
         ]);
@@ -118,7 +118,7 @@ class RegisterController extends Controller
                 $checkSpec = Specialty::where('slug', $slug)->first();
                 if($checkSpec){
 
-                    $doctor->specialties()->sync($checkSpec->id);
+                    $professional->specialties()->sync($checkSpec->id);
                 } else{
 
                     $specialty = Specialty::create(
@@ -127,13 +127,13 @@ class RegisterController extends Controller
                             'slug' => Str::slug($data['otherSpec']),
                         ]
                     );
-                    $doctor->specialties()->sync($specialty->id);
+                    $professional->specialties()->sync($specialty->id);
                 }
             }
 
 
         } else {
-            $doctor->specialties()->sync($data['specialty_id']);
+            $professional->specialties()->sync($data['specialty_id']);
         }
 
 

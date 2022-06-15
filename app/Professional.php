@@ -4,17 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @mixin IdeHelperDoctor
- */
-class Doctor extends Model
+class Professional extends Model
 {
     protected $fillable =
     [
         'photo',
         'phone',
         'performance',
-        'cv',
         'medical_address',
         'slug',
         'user_id'

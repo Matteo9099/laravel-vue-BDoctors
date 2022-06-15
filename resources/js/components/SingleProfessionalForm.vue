@@ -50,8 +50,8 @@
 <script>
 export default {
 
-  name: 'SingleDoctorForm',
-  props: ['currentDoctor'],
+  name: 'SingleprofessionalForm',
+  props: ['currentProfessional'],
 
   data() {
 
@@ -63,7 +63,7 @@ export default {
         sendingInProgress: false,
         errors: {},
         success: false,
-        doctor: null
+        professional: null
       }
         
   },
@@ -74,7 +74,7 @@ export default {
             this.sendingInProgress = true;
             axios.post('/api/leads', {
                 
-                'doctor_id': this.currentDoctor.id,
+                'professional_id': this.currentProfessional.id,
                 'author': this.author,
                 'email' : this.email,
                 'message': this.message,
@@ -101,13 +101,13 @@ export default {
     mounted() {
 
         const slug = this.$route.params.slug;
-        axios.get('/api/doctors/' + slug).then(response => {
+        axios.get('/api/professionals/' + slug).then(response => {
             if(response.data.success == false) {
 
                 abort(404, 'not found');
             } else {
 
-                this.doctor = response.data.results;
+                this.professional = response.data.results;
             }
 
         })
@@ -118,6 +118,6 @@ export default {
 
 <style lang="scss" scoped>
 
-  @import '../../sass/doctor/main.scss';
+  @import '../../sass/professional/main.scss';
 
 </style>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Doctor;
+use App\Professional;
 use App\Http\Controllers\Controller;
 use App\Specialty;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use SebastianBergmann\Comparator\Comparator;
 use Illuminate\Support\Str;
 
-class DoctorController extends Controller
+class ProfessionalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,12 +34,12 @@ class DoctorController extends Controller
     {
         // recupero specializzazioni
         $specialties = Specialty::all();
-        $doctor = Auth::user()->doctor;
+        $professional = Auth::user()->professional;
 
-        if(!Auth::user()->doctor){
-            return view('Admin.Doctors.create', compact('specialties'));
+        if(!Auth::user()->professional){
+            return view('Admin.professionals.create', compact('specialties'));
         } else{
-            return redirect()->route('admin.home', compact('doctor'))->with('alreadyCreated', 'Hai già creato il tuo profilo!');
+            return redirect()->route('admin.home', compact('professional'))->with('alreadyCreated', 'Hai già creato il tuo profilo!');
         }
 
     }
@@ -50,7 +50,7 @@ class DoctorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Doctor $doctor)
+    public function store(Request $request, Professional $professional)
     {
         //
         $request->validate(
@@ -59,7 +59,6 @@ class DoctorController extends Controller
                 'performance' => 'nullable|min:10',
                 'phone' => 'nullable|min:2|numeric',
                 'photo' => 'nullable|mimes:png,jpg,jpeg|max:4096',
-                'cvBlob' => 'nullable|file|max:4096',
                 'specialtiesId' => 'nullable|exists:specialties,id',
                 'otherSpec' => 'nullable|string|min:3|max:12',
             ]
@@ -72,7 +71,7 @@ class DoctorController extends Controller
         // slug unico
         $counter = 1;
 
-        while (Doctor::where('slug', $slug)->first()) {
+        while (Professional::where('slug', $slug)->first()) {
             // se è già presente aggiunge il counter allo slug creato
             $slug  = Str::slug(Auth::user()->name . "-" . Auth::user()->surname) . '-' . $counter;
             $counter++;
@@ -82,7 +81,7 @@ class DoctorController extends Controller
 
         if(!isset($data['specialtiesId'])){
             $data['specialtiesId'] = "Nessuna specializzazione selezionata!";
-            return redirect()->route('admin.doctors.create');
+            return redirect()->route('admin.professionals.create');
         }
 
         if(isset($data['photo'])){
@@ -90,17 +89,12 @@ class DoctorController extends Controller
             $data['photo'] = $imageUrl;
         }
 
-        if(isset($data['cvBlob'])){
-            $cvUrl = Storage::put('doc_cv', $data['cvBlob']);
-            $data['cv'] = $cvUrl;
-        }
-
         $data['user_id'] = Auth::user()->id;
 
         // dd($data);
 
-        $doctor->fill($data);
-        $doctor->save();
+        $professional->fill($data);
+        $professional->save();
 
         if (isset($data['specialtiesId']) || isset($data['otherSpec'])) {
             // se è incluso altro
@@ -114,9 +108,9 @@ class DoctorController extends Controller
 
                     if (isset($data['specialtiesId']) && is_numeric($data['specialtiesId']) ) {
                         array_push($data['specialtiesId'], strval($checkSpec->id));
-                        $doctor->specialties()->sync($data['specialtiesId']);
+                        $professional->specialties()->sync($data['specialtiesId']);
                     } else {
-                        $doctor->specialties()->sync($checkSpec->id);
+                        $professional->specialties()->sync($checkSpec->id);
                     }
                 } else {
                     $specialty = Specialty::create(
@@ -128,13 +122,13 @@ class DoctorController extends Controller
 
                     if (isset($data['specialtiesId']) && is_numeric($data['specialtiesId'])) {
                         array_push($data['specialtiesId'], strval($specialty->id));
-                        $doctor->specialties()->sync($data['specialtiesId']);
+                        $professional->specialties()->sync($data['specialtiesId']);
                     } else {
-                        $doctor->specialties()->sync($specialty->id);
+                        $professional->specialties()->sync($specialty->id);
                     }
                 }
             } else {
-                $doctor->specialties()->sync($data['specialtiesId']);
+                $professional->specialties()->sync($data['specialtiesId']);
             }
         }
 
@@ -150,8 +144,8 @@ class DoctorController extends Controller
      */
     public function show($slug)
     {
-        $doctor = Doctor::where('slug', $slug)->first();
-        return view('Admin.Doctors.show', compact('doctor'));
+        $professional = Professional::where('slug', $slug)->first();
+        return view('Admin.professionals.show', compact('professional'));
     }
 
     /**
@@ -165,13 +159,13 @@ class DoctorController extends Controller
         if(is_numeric($slug)){
             return redirect()->route('404');
         }
-        // dd($doctor->id);
+        // dd($professional->id);
         $specialties = Specialty::all();
-        $doctor = Doctor::where('slug', $slug)->first();
-        // dd($doctor);
-        if(Auth::user()->doctor && Auth::user()->doctor->id == $doctor->id){
-            return view('Admin.Doctors.edit', compact('doctor', 'specialties'));
-            // return view('Admin.Doctors.edit', compact('doctor', 'specialties'));
+        $professional = Professional::where('slug', $slug)->first();
+        // dd($professional);
+        if(Auth::user()->professional && Auth::user()->professional->id == $professional->id){
+            return view('Admin.professionals.edit', compact('professional', 'specialties'));
+            // return view('Admin.professionals.edit', compact('professional', 'specialties'));
         } else {
             return redirect()->route('401');
         }
@@ -184,7 +178,7 @@ class DoctorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Doctor $doctor)
+    public function update(Request $request, Professional $professional)
     {
         //
         $request->validate(
@@ -193,7 +187,6 @@ class DoctorController extends Controller
                 'performance' => 'nullable|min:10',
                 'phone' => 'nullable|min:2|numeric',
                 'photo' => 'nullable|mimes:png,jpg,jpeg|max:4096',
-                'cvBlob' => 'nullable|file|max:4096',
                 'specialtiesId' => 'nullable|exists:specialties,id',
                 'otherSpec' => 'nullable|string|min:3|max:12',
             ]
@@ -203,9 +196,9 @@ class DoctorController extends Controller
 
         $slug  = Str::slug(Auth::user()->name . "-" . Auth::user()->surname);
 
-        if(Doctor::where('slug', $slug)->first()){
+        if(professional::where('slug', $slug)->first()){
             $counter = 1;
-            while (Doctor::where('slug', $slug)->first()) {
+            while (Professional::where('slug', $slug)->first()) {
                 // se è già presente aggiunge il counter allo slug creato
                 $slug  = Str::slug(Auth::user()->name . "-" . Auth::user()->surname) . '-' . $counter;
                 $counter++;
@@ -216,13 +209,13 @@ class DoctorController extends Controller
 
         if (!isset($data['specialtiesId']) && !isset($data['otherSpec'])) {
             $data['specialtiesId'] = "Nessuna specializzazione selezionata!";
-            return redirect()->route('admin.doctors.edit', compact('doctor'));
+            return redirect()->route('admin.professionals.edit', compact('professional'));
         }
 
         if (isset($data['photo'])) {
             //ma voglio anche rimuovere l'immagine vecchia se presente
-            if ($doctor->photo) {
-                Storage::delete($doctor->photo);
+            if ($professional->photo) {
+                Storage::delete($professional->photo);
             }
 
             $imageUrl = Storage::put('doc_img', $data['photo']);
@@ -230,19 +223,9 @@ class DoctorController extends Controller
 
         }
 
-        if (isset($data['cvBlob'])) {
-
-            if ($doctor->cv) {
-                Storage::delete($doctor->cv);
-            }
-
-            $cvUrl = Storage::put('doc_cv', $data['cvBlob']);
-            $data['cv'] = $cvUrl;
-        }
-
         // dd($data);
-        $doctor->update($data);
-        $doctor->save();
+        $professional->update($data);
+        $professional->save();
 
         if (isset($data['specialtiesId']) || isset($data['otherSpec'])) {
             // se è incluso altro
@@ -256,9 +239,9 @@ class DoctorController extends Controller
 
                     if (isset($data['specialtiesId'])) {
                         array_push($data['specialtiesId'], strval($checkSpec->id));
-                        $doctor->specialties()->sync($data['specialtiesId']);
+                        $professional->specialties()->sync($data['specialtiesId']);
                     } else {
-                        $doctor->specialties()->sync($checkSpec->id);
+                        $professional->specialties()->sync($checkSpec->id);
                     }
 
                 } else {
@@ -271,14 +254,14 @@ class DoctorController extends Controller
 
                     if(isset($data['specialtiesId'])){
                         array_push($data['specialtiesId'], strval($specialty->id));
-                        $doctor->specialties()->sync($data['specialtiesId']);
+                        $professional->specialties()->sync($data['specialtiesId']);
                     } else {
-                        $doctor->specialties()->sync($specialty->id);
+                        $professional->specialties()->sync($specialty->id);
                     }
                 }
 
             } else {
-                $doctor->specialties()->sync($data['specialtiesId']);
+                $professional->specialties()->sync($data['specialtiesId']);
             }
         }
 
@@ -291,42 +274,38 @@ class DoctorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Doctor $doctor)
+    public function destroy(Professional $professional)
     {
         //
         $specialties = Specialty::all();
-        $doctor->specialties->each(function($specialty){
+        $professional->specialties->each(function($specialty){
 //            dd($specialty);
-            if($specialty->id > 11 && count($specialty->doctors) == 1){
+            if($specialty->id > 11 && count($specialty->professionals) == 1){
                 $specialty->delete();
             }
         });
 
         $specialties->each(function($specialty){
 //            dd($specialty);
-            if($specialty->id > 11 && count($specialty->doctors) == 1){
+            if($specialty->id > 11 && count($specialty->professionals) == 1){
                 $specialty->delete();
             }
         });
 
-        if($doctor->photo){
-            Storage::delete($doctor->photo);
+        if($professional->photo){
+            Storage::delete($professional->photo);
         }
 
-        if($doctor->cv){
-            Storage::delete($doctor->cv);
-        }
-
-        $doctor->delete();
+        $professional->delete();
 
         return redirect()->route('admin.home')->with('alreadyCreated', 'Profilo eliminato con successo!');
     }
 
     public function charts($slug){
-        if(Auth::user()->doctor->slug == $slug){
+        if(Auth::user()->professional->slug == $slug){
             // logiche per numero recensioni per voto
-            $reviews = Auth::user()->doctor->reviews;
-            $leads = Auth::user()->doctor->leads->sortBy('created_at');
+            $reviews = Auth::user()->professional->reviews;
+            $leads = Auth::user()->professional->leads->sortBy('created_at');
             $count = count($reviews);
             $sum = 0;
             $totalAverage = 0;
@@ -413,7 +392,7 @@ class DoctorController extends Controller
                 }
             }
 
-            return view('Admin.Doctors.charts', compact('chartReviews', 'totalAverage', 'leadsByMonth', 'countLeads'));
+            return view('Admin.professionals.charts', compact('chartReviews', 'totalAverage', 'leadsByMonth', 'countLeads'));
         } else {
             return view('Errors.401');
         }

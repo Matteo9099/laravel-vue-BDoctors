@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Doctor;
+use App\Professional;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
@@ -13,11 +13,11 @@ class HomeController extends Controller
     //
     public function index(){
 
-        $doctor = Doctor::where('user_id', Auth::user()->id)->first();
+        $professional = Professional::where('user_id', Auth::user()->id)->first();
 
         $user = Auth::user();
 
-        return view ('admin.home', compact('doctor', 'user'));
+        return view ('admin.home', compact('professional', 'user'));
     }
 
     public function destroy(User $user){

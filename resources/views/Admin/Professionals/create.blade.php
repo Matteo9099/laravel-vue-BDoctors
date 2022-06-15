@@ -8,7 +8,7 @@
             <div class="col-6 mx-auto">
                 {{-- form creazione --}}
                 <form
-                    action="{{ route('admin.doctors.store') }}"
+                    action="{{ route('admin.professionals.store') }}"
                     method="POST" enctype="multipart/form-data"
                 >
                     @csrf
@@ -28,13 +28,6 @@
                     <div class="form-floating mb-3">
                         <textarea name="performance" class="form-control" placeholder="Inserisci le prestazioni che offri" id="performance" rows="10" style="height: 300px">{{ old('performance') }}</textarea>
                         <label for="performance">Prestazioni offerte</label>
-                    </div>
-                    {{-- cv --}}
-                    <div class="mb-3 d-flex justify-content-between">
-                        <div>
-                            <label for="cvBlob" class="form-label">Carica il tuo Curriculum Vitae</label>
-                            <input name="cvBlob" type="file" class="form-control" id="cvBlob">
-                        </div>
                     </div>
                     {{-- foto --}}
                     <div class="mb-3 d-flex justify-content-between">

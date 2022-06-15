@@ -46,7 +46,7 @@
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body">
                         <p class="h4 text-center my-3">Rispondi al signor {{$lead->author}}</p>
-                        <form action="{{route('admin.leadDoctorRes', $lead->id)}}" class="my-4" method="POST">
+                        <form action="{{route('admin.leadProfessionalRes', $lead->id)}}" class="my-4" method="POST">
                             @csrf
                             <div class="container">
                                 <div class="row">

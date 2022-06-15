@@ -107,7 +107,7 @@
 
                 <!-- IMG GUIDA -->
                 <div class="img-guide text-center">
-                  <img src="../../images/doctor_book.png">
+                  <!-- <img src="../../images/professional_book.png"> -->
                 </div>
 
                 <!-- TESTO GUIDA -->
@@ -129,7 +129,7 @@
 
 
       <!-- SEZIONE DOTTORI SPONSORIZZATI -->
-      <HomeSponsorizzati :doctors="docsList"></HomeSponsorizzati>
+      <HomeSponsorizzati :professionals="profsList"></HomeSponsorizzati>
       <!-- FINE SEZIONE DOTTORI SPONSORIZZATI -->
 
     </div>
@@ -157,7 +157,7 @@
       return{
 
         specialtiesList: [],
-        docsList: [],
+        profsList: [],
         selectedSpecialty: '',
 
       };
@@ -186,13 +186,13 @@
         },
 
         //ottengo tutti i dottori (PROVVISORIO)
-        getDoctors() {
+        getprofessionals() {
 
             axios.get('/api/sponsored')
             .then((response) => {
 
-              this.docsList = response.data.results;
-              console.log(this.docsList);
+              this.profsList = response.data.results;
+              console.log(this.profsList);
 
             })
             .catch(function (error) {
@@ -210,7 +210,7 @@
     mounted() {
         this.getSpecialties();
 
-        this.getDoctors();
+        this.getprofessionals();
     }
 
   }

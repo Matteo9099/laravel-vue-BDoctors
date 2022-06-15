@@ -1,6 +1,6 @@
 <?php
 
-use App\Doctor;
+use App\Professional;
 use App\Lead;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
@@ -13,14 +13,14 @@ class LeadTableSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        $doctors = Doctor::all();
-        foreach ($doctors as $doctor){
+        $professionals = Professional::all();
+        foreach ($professionals as $professional){
             for($i = 0; $i < $faker->numberBetween(0, 10); $i++) {
               $newLead = new Lead();
               $newLead->author = $faker->name . $faker->lastName;
               $newLead->email = $faker->email;
               $newLead->message = $faker->sentence;
-              $newLead->doctor_id = $doctor->id;
+              $newLead->professional_id = $professional->id;
               $newLead->save();
             }
         }

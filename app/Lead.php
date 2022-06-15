@@ -14,10 +14,10 @@ class Lead extends Model
         'author',
         'email',
         'message',
-        'doctor_id'
+        'professional_id'
     ];
 
-    public function doctor() {
-        return $this->belongsTo(Doctor::class);
+    public function professional() {
+        return $this->belongsTo(Professional::class);
     }
 }

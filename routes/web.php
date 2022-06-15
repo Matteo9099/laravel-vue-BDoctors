@@ -30,30 +30,26 @@ Route::middleware('auth')
             Route::get('/{user}', 'HomeController@show')->name('home.show');
 
             // rotte CRUD dottore
-            Route::resource('doctors', 'DoctorController');
+            Route::resource('professionals', 'ProfessionalController');
 
-
-            //rotta get e delete cv
-            Route::get('/cvDownload', 'CvController@getCv')->name('downloadCv');
-            Route::get('cvDelete/{doctor}', 'CvController@cvDelete')->name('deleteCv');
             //rotta delete photo
-            Route::get('/photoDelete/{doctor}', "PhotoController@photoDelete")->name('deletePhoto');
+            Route::get('/photoDelete/{professional}', "PhotoController@photoDelete")->name('deletePhoto');
             // rotta index review
-            Route::get('/doctors/{slug}/reviews', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews');
+            Route::get('/professionals/{slug}/reviews', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews');
             // api reviews per risposta del dottore
-            Route::post('/reviews/response/{review}', [\App\Http\Controllers\Admin\ReviewController::class, 'store'])->name('reviewDoctorRes');
+            Route::post('/reviews/response/{review}', [\App\Http\Controllers\Admin\ReviewController::class, 'store'])->name('reviewProfessionalRes');
             // rotta index Leads
-            Route::get('/doctors/{slug}/leads', [\App\Http\Controllers\Admin\LeadController::class, 'index'])->name('leads');
+            Route::get('/professionals/{slug}/leads', [\App\Http\Controllers\Admin\LeadController::class, 'index'])->name('leads');
             // api leads per risposta del dottore
-            Route::post('/leads/response/{lead}', [\App\Http\Controllers\Admin\LeadController::class, 'store'])->name('leadDoctorRes');
+            Route::post('/leads/response/{lead}', [\App\Http\Controllers\Admin\LeadController::class, 'store'])->name('leadProfessionalRes');
 
             //rotte per subs
-            Route::get('/subscriptions/{doctor}', [SubscriptionController::class, 'index'])->name('subscription.index');
+            Route::get('/subscriptions/{professional}', [SubscriptionController::class, 'index'])->name('subscription.index');
             Route::get('/checkout/{type}', [SubscriptionController::class, 'token'])->name('subscription.pay');
             Route::post('/checkout/{price}', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
 
             // rotte per chars
-            Route::get('/charts/{doctor}', [\App\Http\Controllers\Admin\DoctorController::class, 'charts'])->name('charts');
+            Route::get('/charts/{professional}', [\App\Http\Controllers\Admin\ProfessionalController::class, 'charts'])->name('charts');
         }
     );
 

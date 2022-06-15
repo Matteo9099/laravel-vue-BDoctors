@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Doctor;
+use App\Professional;
 use App\Http\Controllers\Controller;
 use App\Mail\NewReview;
 use App\Review;
@@ -18,7 +18,7 @@ class ReviewController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            "doctor_id" => "required|exists:doctors,id",
+            "professional_id" => "required|exists:professionals,id",
             "title" => "required|min:2,max:20",
             "author" => "required|min:2",
             "email" => "required|email",
@@ -36,7 +36,7 @@ class ReviewController extends Controller
             $newReview->fill($data);
             $newReview->save();
 
-            $doc = Doctor::where("id", $data["doctor_id"])
+            $doc = Professional::where("id", $data["professional_id"])
                 ->with("user")
                 ->first();
             $docMail = $doc->user->email;
@@ -55,9 +55,9 @@ class ReviewController extends Controller
 
     public function index($docSlug) {
 
-        $doctor = Doctor::all()->where('slug', '=', $docSlug)->first();
+        $professional = Professional::all()->where('slug', '=', $docSlug)->first();
 
-        $reviews = Review::all()->where('doctor_id', '=' , $doctor->id)->sortByDesc('created_at')->values()->all();
+        $reviews = Review::all()->where('professional_id', '=' , $professional->id)->sortByDesc('created_at')->values()->all();
 
         return response()->json([
             'results' => $reviews,

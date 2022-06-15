@@ -16,11 +16,11 @@ class Review extends Model
         'performance',
         'vote',
         'review',
-        'doctor_id',
+        'professional_id',
         'email',
     ];
 
-    public function doctor() {
-        return $this->belongsTo(Doctor::class);
+    public function professional() {
+        return $this->belongsTo(Professional::class);
     }
 }

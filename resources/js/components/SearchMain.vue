@@ -156,30 +156,30 @@
               <div id="card-doc-container" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 gy-5">
 
                   <!-- CARD 1 -->
-                  <div class="col animate__animated animate__fadeInUp" v-for="doctor in filteredDoctors" :key="doctor.id">
+                  <div class="col animate__animated animate__fadeInUp" v-for="professional in filteredProfessionals" :key="professional.id">
                       <div class="ms_card card h-100">
 
                           <!-- IMMAGINE DOTTORE -->
                           <div class="img-card-wrap">
-                            <img :src="doctor.photo" class="card-img-top img-thumbnail">
+                            <img :src="professional.photo" class="card-img-top img-thumbnail">
                           </div>
 
                           <div class="card-body">
                             <!-- NOME E COGNOME -->
                             <h5 class="card-title">
-                                {{doctor.user.name}} {{doctor.user.surname}}
+                                {{professional.user.name}} {{professional.user.surname}}
                             </h5>
                             <ul class="spec-list">
                                 <!-- SPECIALTIES -->
-                                <li v-for="(specName, index) in doctor.specialties" :key="index">
+                                <li v-for="(specName, index) in professional.specialties" :key="index">
                                     {{specName.name}}
                                 </li>
                             </ul>
                             <!-- INDIRIZZO -->
-                            <p class="card-text">{{doctor.medical_address}}</p>
+                            <p class="card-text">{{professional.medical_address}}</p>
 
                             <!-- LINK PROFILO DOTTORE -->
-                            <router-link class="btn btn-primary text-white" :to="'/doctors/' + doctor.slug">Vai al profilo</router-link>
+                            <router-link class="btn btn-primary text-white" :to="'/professionals/' + professional.slug">Vai al profilo</router-link>
                           </div>
                       </div>
                   </div>
@@ -207,7 +207,7 @@ export default {
 
     data() {
         return {
-            doctors: [],
+            professionals: [],
             ricerca: '',
             specialtiesList: [],
             checkedReview : [],
@@ -219,16 +219,16 @@ export default {
 
     methods: {
 
-        getDoctors() {
+        getprofessionals() {
 
-            axios.get("/api/docs" )
+            axios.get("/api/s" )
                 .then((response) => {
                     this.loading = false;
                     if(response.data.success == false ){
                         // this.notFound = true;
                     } else {
                         // this.notFound = false;
-                        this.doctors = response.data.results;
+                        this.professionals = response.data.results;
                     }
                 })
                 .catch(function(error) {
@@ -258,8 +258,8 @@ export default {
 
         },
         // filtro dottori
-        doctorsFilter(){
-           this.doctors = [];
+        professionalsFilter(){
+           this.professionals = [];
             this.loading = true;
            this.checkedReview.forEach( check =>{
                const params = {
@@ -267,30 +267,30 @@ export default {
                    rangeMin : this.rangeMin,
                }
                axios.get('/api/filter', {params}).then( res => {
-                   /*this.doctors = res.data.results;
-                   console.log(this.doctors);*/
+                   /*this.professionals = res.data.results;
+                   console.log(this.professionals);*/
                    this.loading = false;
                    console.log(res.data.success)
                    if(res.data.success == false){
                        // this.notFound = true;
                    } else{
                        // this.notFound = false;
-                       res.data.results.forEach( doctor => {
-                           if(!this.doctors.some( doc => doc.id === doctor.id)){
-                               this.doctors.push(doctor);
+                       res.data.results.forEach( professional => {
+                           if(!this.professionals.some( prof => prof.id === professional.id)){
+                               this.professionals.push(professional);
                            }
                        })
                    }
                })
            })
-            /*if(this.filteredDoctors.length == 0){
+            /*if(this.filteredProfessionals.length == 0){
                 this.notFound = true;
             } else {
                 this.notFound = false;
             }*/
         },
-        doctorsNumberFilter(){
-            this.doctors = [];
+        professionalsNumberFilter(){
+            this.professionals = [];
             this.loading = true;
             this.checkedNumberReview.forEach( numb => {
                 const params = {
@@ -304,17 +304,17 @@ export default {
                     } else {
                         // this.notFound = false;
                         console.log(res.data.results);
-                        res.data.results.forEach( doctor => {
-                            if(!this.doctors.some( doc => doc.id == doctor.id)){
-                                this.doctors.push(doctor);
+                        res.data.results.forEach( professional => {
+                            if(!this.professionals.some( prof => prof.id == professional.id)){
+                                this.professionals.push(professional);
                             }
                         })
                     }
                 })
             })
         },
-        filterDoctors() {
-            this.doctors = [];
+        filterprofessionals() {
+            this.professionals = [];
             // selezionati entrambi
             this.loading = true;
             if(this.checkedReview.length > 0 && this.checkedNumberReview.length > 0 ){
@@ -352,9 +352,9 @@ export default {
                                 if(res.data.success == true){
                                     // console.log(res.data.results);
                                     // this.notFound = false;
-                                    res.data.results.forEach( doctor =>{
-                                        if(!this.doctors.some( doc => doc.id == doctor.id)){
-                                            this.doctors.push(doctor);
+                                    res.data.results.forEach( professional =>{
+                                        if(!this.professionals.some( prof => prof.id == professional.id)){
+                                            this.professionals.push(professional);
                                         }
                                     })
                                 } else {
@@ -396,10 +396,10 @@ export default {
                                 this.loading = false;
                                 if(res.data.success == true){
                                     // this.notFound = false;
-                                    res.data.results.forEach( doctor =>{
+                                    res.data.results.forEach( professional =>{
                                         // console.log(res.data.results);
-                                        if(!this.doctors.some( doc => doc.id == doctor.id)){
-                                            this.doctors.push(doctor);
+                                        if(!this.professionals.some( prof => prof.id == professional.id)){
+                                            this.professionals.push(professional);
                                         }
                                     })
                                 } else {
@@ -411,24 +411,24 @@ export default {
                 }
             } else if (this.checkedReview.length > 0 && this.checkedNumberReview.length == 0){
                 // selezionato solo media voto
-                this.doctors = [];
+                this.professionals = [];
                 //funcione per solo media
-                this.doctorsFilter();
+                this.professionalsFilter();
             } else if (this.checkedReview.length == 0 && this.checkedNumberReview.length > 0){
                 //selezionato solo numero recensioni
-                this.doctors = [];
+                this.professionals = [];
                 // funzione per solo numer rec
-                this.doctorsNumberFilter();
+                this.professionalsNumberFilter();
 
             } else {
-                this.doctor =[];
-                this.getDoctors();
+                this.professional =[];
+                this.getprofessionals();
             }
         },
         setEmpty(){
             // console.log('vuoto');
             setTimeout(()=>{
-                if(this.filteredDoctors.length == 0){
+                if(this.filteredProfessionals.length == 0){
                     console.log('vuoto');
                     this.notFound = true;
                 } else{
@@ -439,17 +439,17 @@ export default {
     },
 
     mounted() {
-        this.getDoctors();
+        this.getprofessionals();
         this.getSpecialties();
     },
     computed:{
-        filteredDoctors: function(){
-            return this.doctors.filter(doc =>{
+        filteredProfessionals: function(){
+            return this.professionals.filter(prof =>{
                 let query = this.ricerca.toLowerCase().replaceAll(' ', "");
                 if(this.$route.params.slug != 'tutte le specializzazioni'){
-                    return !!doc.specialties.some(specialty => specialty.slug == this.$route.params.slug && doc.slug.replaceAll("-", '').includes(query));
+                    return !!prof.specialties.some(specialty => specialty.slug == this.$route.params.slug && prof.slug.replaceAll("-", '').includes(query));
                 } else{
-                    return doc.slug.replaceAll("-", '').includes(query);
+                    return prof.slug.replaceAll("-", '').includes(query);
                 }
             })
         },
@@ -457,13 +457,13 @@ export default {
     watch:{
         checkedReview: {
             immediate: true,
-            handler: 'filterDoctors',
+            handler: 'filterprofessionals',
         },
         checkedNumberReview: {
             immediate: true,
-            handler: 'filterDoctors',
+            handler: 'filterprofessionals',
         },
-        filteredDoctors: {
+        filteredProfessionals: {
             immediate: true,
             handler : 'setEmpty'
         }

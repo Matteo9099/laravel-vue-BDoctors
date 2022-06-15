@@ -15,8 +15,8 @@ class ReviewController extends Controller
 {
     //
     public function index($slug){
-        if(Auth::user()->doctor->slug == $slug){
-            $reviews = Auth::user()->doctor->reviews->sortByDesc('created_at');
+        if(Auth::user()->professional->slug == $slug){
+            $reviews = Auth::user()->professional->reviews->sortByDesc('created_at');
             return view('Admin.Reviews.index', compact('reviews'));
         } else {
             return redirect()->route('401');
@@ -31,7 +31,7 @@ class ReviewController extends Controller
         ]);
         if ($validator->fails()) {
             $errors = $validator->errors();
-            return redirect()->route('admin.reviews', Auth::user()->doctor->slug)->with('fail', 'Impossibile inviare il messaggio')->with(compact('errors'));
+            return redirect()->route('admin.reviews', Auth::user()->professional->slug)->with('fail', 'Impossibile inviare il messaggio')->with(compact('errors'));
         } else {
             $email = $review->email;
             $name= $review->author;
@@ -42,7 +42,7 @@ class ReviewController extends Controller
 
             Mail::to($email)->send(new NewReviewResponse($name, $docName, $docSurname,$date,$content));
 
-            return redirect()->route('admin.reviews', Auth::user()->doctor->slug)->with('success', 'Messaggio di risposta inviato con successo');
+            return redirect()->route('admin.reviews', Auth::user()->professional->slug)->with('success', 'Messaggio di risposta inviato con successo');
         }
     }
 }

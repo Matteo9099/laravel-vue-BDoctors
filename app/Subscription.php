@@ -11,8 +11,8 @@ class Subscription extends Model
 {
     protected $fillable = ["name", "price"];
 
-    public function doctors()
+    public function professionals()
     {
-        return $this->belongsToMany(Doctor::class)->withTimestamps()->withPivot('expires_at');
+        return $this->belongsToMany(Professional::class)->withTimestamps()->withPivot('expires_at');
     }
 }

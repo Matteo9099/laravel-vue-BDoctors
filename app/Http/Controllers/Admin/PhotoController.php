@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Doctor;
+use App\professional;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,15 +14,15 @@ class PhotoController extends Controller
     //
     public function photoDelete($slug){
 
-        $doctor = Doctor::where('slug', $slug)->first();
+        $professional = Professional::where('slug', $slug)->first();
 
-        Storage::delete( $doctor->photo);
+        Storage::delete( $professional->photo);
 
-        $doctor->photo =  null;
+        $professional->photo =  null;
 
-        $doctor->save();
+        $professional->save();
 
-        return redirect()->route('admin.doctors.edit', $doctor->slug);
+        return redirect()->route('admin.professionals.edit', $professional->slug);
 
     }
 }

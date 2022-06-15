@@ -67,9 +67,9 @@
 <script>
 
   export default {
-    name: 'SingleDoctorReview',
+    name: 'SingleProfessionalReview',
 
-    props: ['currentDoctor'],
+    props: ['currentProfessional'],
 
     data() {
       return {
@@ -122,10 +122,10 @@
 
         axios.post('/api/review', {
 
-          'doctor_id': this.currentDoctor.id,
+          'professional_id': this.currentProfessional.id,
           'vote': this.voteValue,
           'title': this.title,
-           'email' : this.email,
+          'email' : this.email,
           'author': this.name,
           'review': this.reviewText,
 
@@ -159,5 +159,5 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '../../sass/doctor/main.scss';
+  @import '../../sass/professional/main.scss';
 </style>

@@ -2,12 +2,12 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
-use App\Doctor;
+use App\Professional;
 use App\User;
 use App\Specialty;
 use Illuminate\Support\Str;
 
-class DoctorTableSeeder extends Seeder
+class ProfessionalTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -33,18 +33,17 @@ class DoctorTableSeeder extends Seeder
           $newUser->address = $faker->address;
           $newUser->password = Hash::make($faker->numerify('user-####'));
           $newUser->save();
-          $newDoctor = new Doctor();
-          $newDoctor->phone = $faker->phoneNumber;
-          $newDoctor->medical_address = $faker->address;
-          $newDoctor->cv = 'cv.jpeg';
-          $newDoctor->photo = 'doctor-login.png';
-          $newDoctor->performance = $faker->paragraph;
-          $newDoctor->slug = $faker->unique()->lexify('slug-????');
-          $newDoctor->user_id = $newUser->id;
-          $newDoctor->save();
-          $newDoctor->slug = Str::slug($newDoctor->user['name'] .'-'. $newDoctor->user['surname']);
-          $newDoctor->save();
-          $newDoctor->specialties()->sync($specialtyPlaceHolder);
+          $newprofessional = new Professional();
+          $newprofessional->phone = $faker->phoneNumber;
+          $newprofessional->medical_address = $faker->address;
+          $newprofessional->photo = 'professional-login.png';
+          $newprofessional->performance = $faker->paragraph;
+          $newprofessional->slug = $faker->unique()->lexify('slug-????');
+          $newprofessional->user_id = $newUser->id;
+          $newprofessional->save();
+          $newprofessional->slug = Str::slug($newprofessional->user['name'] .'-'. $newprofessional->user['surname']);
+          $newprofessional->save();
+          $newprofessional->specialties()->sync($specialtyPlaceHolder);
           $specialtyPlaceHolder = [];
           $specialtyPlaceHolder[] = $faker->randomElement($specialtyId, 3);
           $boolPlaceholder = null;

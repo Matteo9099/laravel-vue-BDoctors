@@ -1,19 +1,19 @@
 <template>
 
   <main>
-    <div id="doctor-container">
+    <div id="professional-container">
       <div id="top-color-row">
 
         <div class="container d-flex">
 
             <!-- FOTO -->
             <div class="doc-ph-wrap">
-              <img :src="singledoc.photo" class="img-thumbnail" alt="foto dottore">
+              <img :src="singleprof.photo" class="img-thumbnail" alt="foto dottore">
             </div>
 
             <!-- NOME e COGNOME -->
             <div id="doc-title">
-              <h2 class="doc-name"> {{singledoc.user.name}} {{singledoc.user.surname}} </h2>
+              <h2 class="doc-name"> {{singleprof.user.name}} {{singleprof.user.surname}} </h2>
             </div>
 
         </div>
@@ -24,19 +24,19 @@
       <div class="container">
 
           <div id="info-container">
-            <div id="col-doctor" class="row row-cols-1 row-cols-lg-2 justify-content-lg-between">
+            <div id="col-professional" class="row row-cols-1 row-cols-lg-2 justify-content-lg-between">
 
               <div id="col-info" class="col-lg-7">
 
                 <div class="address ms_row-info">
                   <h3>Indirizzo</h3>
-                  {{singledoc.medical_address}}
+                  {{singleprof.medical_address}}
                 </div>
 
                 <div class="specialties ms_row-info">
                   <h3>Competenze</h3>
                   <ul class="spec-list">
-                    <li v-for="(singlespec, index) in singledoc.specialties" :key="index">
+                    <li v-for="(singlespec, index) in singleprof.specialties" :key="index">
                       {{singlespec.name}}
                     </li>
                   </ul>
@@ -44,20 +44,15 @@
 
                 <div class="performance ms_row-info">
                   <h3>Prestazioni</h3>
-                  {{singledoc.performance}}
-                </div>
-
-                <div class="performance ms_row-info">
-                  <h3>Curriculum</h3>
-                  <a :href="singledoc.cv" target="_blank">Apri il Curriculum Vitae</a>
+                  {{singleprof.performance}}
                 </div>
 
                 <!-- COMPONENT RECENSIONE -->
-                <SingleDoctorReview :currentDoctor="singledoc"></SingleDoctorReview>
+                <SingleProfessionalReview :currentProfessional="singleprof"></SingleProfessionalReview>
 
                 <!-- LISTA RECENSIONI -->
                 <div class="reviews ms_row-info">
-                  <h3>{{singledoc.reviews.length}} Recensioni</h3>
+                  <h3>{{singleprof.reviews.length}} Recensioni</h3>
 
                   <ul class="prova">
                     <li v-for="(review, index) in reviews" :key="index">
@@ -86,14 +81,14 @@
 
                 <div class="phone">
                     <h3>Telefono</h3>
-                    {{singledoc.phone}}
+                    {{singleprof.phone}}
                 </div>
 
                 <div class="message">
                     <h3>Scrivi un messaggio</h3>
 
                     <!-- FORM INVIO MESSAGGIO -->
-                    <SingleDoctorForm :currentDoctor="singledoc"></SingleDoctorForm>
+                    <SingleProfessionalForm :currentProfessional="singleprof"></SingleProfessionalForm>
 
                 </div>
               </div>
@@ -110,18 +105,18 @@
 
 <script>
 
-  import SingleDoctorReview from './SingleDoctorReview';
-  import SingleDoctorForm from './SingleDoctorForm';
+  import SingleProfessionalReview from './SingleProfessionalReview';
+  import SingleProfessionalForm from './SingleProfessionalForm';
 
   export default {
 
-    name: 'SingleDoctorMain',
-    props: ['singledoc', 'reviews'],
+    name: 'SingleProfessionalMain',
+    props: ['singleprof', 'reviews', 'formattedDates'],
 
     components: {
 
-      SingleDoctorReview,
-      SingleDoctorForm,
+      SingleProfessionalReview,
+      SingleProfessionalForm,
     
     },
 
@@ -130,5 +125,5 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '../../sass/doctor/main.scss';
+  @import '../../sass/professional/main.scss';
 </style>

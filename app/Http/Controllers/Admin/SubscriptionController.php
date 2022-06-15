@@ -12,7 +12,7 @@ class SubscriptionController extends Controller
 {
     //index
     public function index($slug){
-        if(Auth::user()->doctor->slug == $slug){
+        if(Auth::user()->professional->slug == $slug){
             $bronze = Subscription::whereId(1)->first();
             $silver = Subscription::whereId(2)->first();
             $gold = Subscription::whereId(3)->first();
@@ -38,14 +38,14 @@ class SubscriptionController extends Controller
     }
 
     public function checkout(Request $request, $price){
-        $doctor = Auth::user()->doctor;
-//        $doctor->subscriptions()->sync([1]);
-        if(count($doctor->subscriptions) > 0){
-            $doctorLastSub = $doctor->subscriptions()->orderByDesc('pivot_expires_at', 'asc')->first();
-    //        dd($doctorLastSub->pivot->expires_at);
-            $lastSubDate = new Carbon($doctorLastSub->pivot->expires_at);
+        $professional = Auth::user()->professional;
+//        $professional->subscriptions()->sync([1]);
+        if(count($professional->subscriptions) > 0){
+            $professionalLastSub = $professional->subscriptions()->orderByDesc('pivot_expires_at', 'asc')->first();
+    //        dd($professionalLastSub->pivot->expires_at);
+            $lastSubDate = new Carbon($professionalLastSub->pivot->expires_at);
         } else {
-//            dd($doctor->subscriptions);
+//            dd($professional->subscriptions);
             $lastSubDate = Carbon::yesterday()->addDays(1);
 //            dd($lastSubDate);
         }
@@ -60,8 +60,8 @@ class SubscriptionController extends Controller
         } else {
             $expires = $lastSubDate->addDays(6);
         }
-//        $doctor->subscriptions()->attach($subId, ['expires_at' => $expires]);
-//        dd($doctor);
+//        $professional->subscriptions()->attach($subId, ['expires_at' => $expires]);
+//        dd($professional);
         $gateway = new \Braintree\Gateway([
             // i dati li riprendiamo dal config precedentemente inizializzato
             'environment' => config('services.braintree.environment'),
@@ -83,7 +83,7 @@ class SubscriptionController extends Controller
         ]);
 
         if ($result->success) {
-            $doctor->subscriptions()->attach($subId, ['expires_at' => $expires]);
+            $professional->subscriptions()->attach($subId, ['expires_at' => $expires]);
             return view('Admin.Subscription.checkout', compact('subscription', 'expires'));
         } else {
             $errorString = "";

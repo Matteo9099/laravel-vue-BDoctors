@@ -349,7 +349,7 @@
                   <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
-                        <p>Salve, Dottor {{ $doctorName }} - {{ $doctorSurname }}</p>
+                        <p>Salve, Dottor {{ $professionalName }} - {{ $professionalSurname }}</p>
                         <p>Lei ha ricevuto una nuova recensione da</p>
                         <p> <strong>{{ $review->author }}</strong>, email: <strong>{{$review->email}}</strong> titolo : <strong>{{ $review->title }}</strong> </p>
                         <p> <strong>Con votazione di:</strong> {{ $review->vote }} stelle su 5 </p>

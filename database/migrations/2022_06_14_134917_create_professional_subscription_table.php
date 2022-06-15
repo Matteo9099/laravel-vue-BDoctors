@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDoctorSubscriptionTable extends Migration
+class CreateProfessionalSubscriptionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateDoctorSubscriptionTable extends Migration
      */
     public function up()
     {
-        Schema::create('doctor_subscription', function (Blueprint $table) {
+        Schema::create('professional_subscription', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('doctor_id');
-            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
+            $table->unsignedBigInteger('professional_id');
+            $table->foreign('professional_id')->references('id')->on('professionals')->onDelete('cascade');
             $table->unsignedBigInteger('subscription_id');
             $table->foreign('subscription_id')->references('id')->on('subscriptions')->onDelete('cascade');
-            $table->index(['doctor_id', 'subscription_id']);
+            $table->index(['professional_id', 'subscription_id']);
             $table->dateTimeTz('expires_at');
-            $table->timestampsTz();
+            $table->timestamps();
         });
     }
 
@@ -32,6 +32,6 @@ class CreateDoctorSubscriptionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('doctor_subscription');
+        Schema::dropIfExists('professional_subscription');
     }
 }
