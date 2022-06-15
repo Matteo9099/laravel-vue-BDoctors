@@ -54,7 +54,6 @@ export default {
                 if (response.data.success) {
 
                     console.log(response.data.results)
-                    console.log('ciao')
                     this.reviewsList = response.data.results
                     console.log(this.reviewsList)
 

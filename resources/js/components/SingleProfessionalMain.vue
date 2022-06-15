@@ -59,12 +59,26 @@
 
                       <h4>{{review.author}}</h4>
 
-                      <span class="rev-vote">
-                        <i v-for="i in 5" :key="i" class="star-color fa-star" :class="(i <= review.vote) ? 'fa-solid' : 'fa-regular' "></i>
-                      </span>
+                      <div class="d-flex justify-content-between">
+
+                        <!-- VOTO E TITOLO -->
+                        <div class="vote-title-wrap">
+
+                          <span class="rev-vote">
+                            <i v-for="i in 5" :key="i" class="star-color fa-star" :class="(i <= review.vote) ? 'fa-solid' : 'fa-regular' "></i>
+                          </span>
                       
-                      
-                      <span class="rev-title">{{review.title}}</span>
+                          <span class="rev-title">{{review.title}}</span>
+
+                        </div>
+
+                        <!-- DATA RECENSIONE -->
+                        <div class="date-review">
+                          <span class=""></span>
+                        </div>
+
+                      </div>
+
                       <p class="rev-text">{{review.review}}</p>
 
                     </li>

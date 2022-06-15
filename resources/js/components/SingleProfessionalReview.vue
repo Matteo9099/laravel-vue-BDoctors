@@ -49,12 +49,25 @@
               </div>
 
               <!-- BUTTON SUBMIT -->
+
+              <!--
               <button type="submit" class="btn btn-success text-white">Pubblica</button>
 
 
               <div v-if="success" class="alert alert-success mx-auto w-75 mt-4 p-2 text-center">
                   <i class="fa-solid fa-circle-check"></i> Recensione pubblicata!
               </div>
+              -->
+
+              <!-- PROVA BTN -->
+              <!-- <button type="submit" class="btn btn-success text-white">Pubblica</button> -->
+
+              <button type="submit" class="btn btn-success text-white">{{sendingInProgress? 'Pubblicazione in corso...':'Pubblica'}}</button>
+
+              <div v-if="success" class="alert alert-success mx-auto w-75 mt-4 p-2 text-center">
+                  <i class="fa-solid fa-circle-check"></i> Recensione pubblicata!
+              </div>
+              <!-- FINE PROVA BTN -->
 
             </form>
 
@@ -83,6 +96,7 @@
           goldStarValue: '',
           goldStarArray: [],
           success: false,
+          sendingInProgress: false,
 
       }
     },
@@ -120,6 +134,8 @@
 
       sendReview() {
 
+        this.sendingInProgress = true;
+        
         axios.post('/api/review', {
 
           'professional_id': this.currentProfessional.id,
@@ -132,7 +148,9 @@
 
         }).then(response =>{
 
-            console.log(response);
+            this.sendingInProgress = false;
+
+            //console.log(response);
             if (response.data.errors) {
 
               this.success = false;

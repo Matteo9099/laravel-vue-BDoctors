@@ -3246,6 +3246,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3334,6 +3348,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'SingleProfessionalReview',
   props: ['currentProfessional'],
@@ -3347,7 +3374,8 @@ __webpack_require__.r(__webpack_exports__);
       reviewText: '',
       goldStarValue: '',
       goldStarArray: [],
-      success: false
+      success: false,
+      sendingInProgress: false
     };
   },
   methods: {
@@ -3373,6 +3401,7 @@ __webpack_require__.r(__webpack_exports__);
     sendReview: function sendReview() {
       var _this = this;
 
+      this.sendingInProgress = true;
       axios.post('/api/review', {
         'professional_id': this.currentProfessional.id,
         'vote': this.voteValue,
@@ -3381,7 +3410,7 @@ __webpack_require__.r(__webpack_exports__);
         'author': this.name,
         'review': this.reviewText
       }).then(function (response) {
-        console.log(response);
+        _this.sendingInProgress = false; //console.log(response);
 
         if (response.data.errors) {
           _this.success = false;
@@ -3505,7 +3534,6 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/api/reviews/' + this.$route.params.slug).then(function (response) {
         if (response.data.success) {
           console.log(response.data.results);
-          console.log('ciao');
           _this.reviewsList = response.data.results;
           console.log(_this.reviewsList);
         } else {
@@ -6991,22 +7019,34 @@ var render = function () {
                           _c("h4", [_vm._v(_vm._s(review.author))]),
                           _vm._v(" "),
                           _c(
-                            "span",
-                            { staticClass: "rev-vote" },
-                            _vm._l(5, function (i) {
-                              return _c("i", {
-                                key: i,
-                                staticClass: "star-color fa-star",
-                                class:
-                                  i <= review.vote ? "fa-solid" : "fa-regular",
-                              })
-                            }),
-                            0
+                            "div",
+                            { staticClass: "d-flex justify-content-between" },
+                            [
+                              _c("div", { staticClass: "vote-title-wrap" }, [
+                                _c(
+                                  "span",
+                                  { staticClass: "rev-vote" },
+                                  _vm._l(5, function (i) {
+                                    return _c("i", {
+                                      key: i,
+                                      staticClass: "star-color fa-star",
+                                      class:
+                                        i <= review.vote
+                                          ? "fa-solid"
+                                          : "fa-regular",
+                                    })
+                                  }),
+                                  0
+                                ),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "rev-title" }, [
+                                  _vm._v(_vm._s(review.title)),
+                                ]),
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(0, true),
+                            ]
                           ),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "rev-title" }, [
-                            _vm._v(_vm._s(review.title)),
-                          ]),
                           _vm._v(" "),
                           _c("p", { staticClass: "rev-text" }, [
                             _vm._v(_vm._s(review.review)),
@@ -7024,7 +7064,7 @@ var render = function () {
                 "div",
                 { staticClass: "col-lg-4", attrs: { id: "col-booking" } },
                 [
-                  _vm._m(0),
+                  _vm._m(1),
                   _vm._v(" "),
                   _c("div", { staticClass: "phone" }, [
                     _c("h3", [_vm._v("Telefono")]),
@@ -7057,6 +7097,12 @@ var render = function () {
   ])
 }
 var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "date-review" }, [_c("span", {})])
+  },
   function () {
     var _vm = this
     var _h = _vm.$createElement
@@ -7332,7 +7378,15 @@ var render = function () {
                 staticClass: "btn btn-success text-white",
                 attrs: { type: "submit" },
               },
-              [_vm._v("Pubblica")]
+              [
+                _vm._v(
+                  _vm._s(
+                    _vm.sendingInProgress
+                      ? "Pubblicazione in corso..."
+                      : "Pubblica"
+                  )
+                ),
+              ]
             ),
             _vm._v(" "),
             _vm.success
@@ -24198,7 +24252,12 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+<<<<<<< HEAD
 module.exports = __webpack_require__(/*! C:\Users\morga\OneDrive\Desktop\Progetto finale Boolean\laravel-vue-BDoctors\resources\js\front.js */"./resources/js/front.js");
+=======
+
+module.exports = __webpack_require__(/*! C:\Users\flek8\OneDrive\Desktop\Personal Works\laravel-vue-BDoctors\resources\js\front.js */"./resources/js/front.js");
+>>>>>>> 6f3a9b6b5b549f13d6d2c73758f31844f4918994
 
 
 /***/ })
