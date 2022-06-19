@@ -1,32 +1,7 @@
-# Piattaforma prenotazione visite Medici Specializzati
+# BDoctor è una WebApp che permette a medici professionisti di farsi notare, infatti registrandosi alla piattaforma e creando il proprio profilo si può apparire nelle ricerche fatte dagli utenti che hanno bisogno di un medico.
 
-## Meeting 5 Maggio
-- Mettere asterisco - mettere campo specializzazione - mettere controllo password diversa lato client
-- validazione lato client e server e vedere correzione profilo dottore
-- Anteprima immagine attuale in modifica (in modifica scriere in header modifica)
-- Evitare sempre merge prima della presentazione
-- Inserire verifica eliminazione tramite js
-- Verifica per edit -> non posso modificare altro utente -> non uso ID per url?
+# Grazie alle sponsorizzazioni si appare invece in cima alle ricerche e nella home page! per sponsorizzarsi sarà necessario pagare un abbonamento. 
 
-### Se abbiamo tempo
-- Pensiamo il flusso del guest, da che pagina parte un utente -> veidiamo
+# L'utente potrà contattare il medico tramite email o contatto telefonica qualora ci fosse, potrà inoltre lasciare un voto da 1 a 5 con una recensione visibile anche agli altri visitatori successivi.
 
-
-# Api post
-- settare mail trap e due modifiche al DB : doctor_id in leads e revies non può essere nullable
-
-- Eliminare la foto dottore senza dover eliminare il profilo
-
-Prova
-
-prova
-
-# Braintree
-- File config/services/php -> credenziali per braintree con riferimento a file ENV 
-- creo blade per form iscrizione
-- composer require braintree/braintree_php
-- creo le rotte
-- creo rotta di POST per checkout
-asdasd
-- Mostra prima nella ricerca i sponsorizzati - fatto
-- 
+# Il medico in questione potrà anche visualizzare le statistiche personali, ovvero recensioni ricevute, email e media voto...
