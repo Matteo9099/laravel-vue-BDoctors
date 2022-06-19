@@ -1,0 +1,46 @@
+/**** HEADER STYLE ****/
+@import "../_variables.scss";
+
+#header {
+  background-color: $main-bg;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#nav-logo {
+  color: #fff;
+  text-shadow: 0px 0px 1px  #212f3d;
+}
+
+//BG COLOR Button Hamburger
+.my-btn-color {
+  background-color: #5dade2;
+}
+
+#head-btn {
+  max-width: 180px;
+  margin-left: auto;
+}
+
+//LINK REGISTER E LOGIN
+.btn-reg {
+
+  // background-color: #ff895d;
+  // background-color: #f5b041;
+  background-color:   #e67e22;
+  font-size: 1.1em;
+}
+
+.btn-reg:hover {
+  box-shadow: 0px 0px 1.5px #000;
+}
+
+.btn-login {
+  background-color: #ecf0f1 ;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.btn-login:hover {
+  box-shadow: 0px 0px 1.5px #000;
+}

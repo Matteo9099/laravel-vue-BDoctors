@@ -1,0 +1,67 @@
+/***** DOTTORI SPONSORIZZATI STYLE *****/
+@import "../_variables.scss";
+
+#sponsored-section {
+  // background-color: #F1F5F9;
+  // background: linear-gradient(-180deg,hsl(206deg 95% 94%),#fff);
+  padding-top: 100px;
+  padding-bottom: 120px;
+  background: linear-gradient(0,hsl(206deg 95% 94%),#fff);
+}
+
+h2 {
+  font-size: 1.6em;
+  text-align: center;
+  max-width: 180px;
+  background-color:#2e86c1 ;
+  padding: 6px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin-bottom: 0;
+  color: #fff;
+  border: 1px solid #2e86c1;
+  border-bottom: none;
+  box-shadow: 0px 0px 1px#000;
+
+}
+
+#sponsor-container {
+  // background-color: #DBEDFD;
+  background-color: #fff;
+  border-radius: 5px;
+  border-top-left-radius: 0;
+  box-shadow: 0px 0px 1px  #bfc9ca;
+  min-height: 400px;
+
+  .ms_card {
+    box-shadow: 0px 0px 5px #c3c3c3;
+    border-radius: 10px;
+  }
+
+  .img-card-wrap {
+    max-height: 150px;
+    
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .card-title {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    color: #2b4660;
+    font-weight: 800;
+  }
+
+  .spec-list {
+    margin-bottom: 8px;
+    color: #556;
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .card-text {
+    color: #556;
+  }
+}
